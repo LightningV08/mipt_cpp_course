@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+// Стратегия
 using TextTransform = std::function<std::string(std::string)>;
 
 class TextProcessor {
@@ -21,6 +22,7 @@ private:
     TextTransform strategy_;
 };
 
+// Декоратор
 TextTransform with_brackets(TextTransform inner) {
     return [inner](std::string text) {
         return "[" + inner(text) + "]";
@@ -28,6 +30,7 @@ TextTransform with_brackets(TextTransform inner) {
 }
 
 int main() {
+    // Стратегия
     TextTransform unchanged = [](std::string text) { return text; };
     TextTransform reversed = [](std::string text) {
         std::reverse(text.begin(), text.end());
@@ -40,8 +43,11 @@ int main() {
     processor.set_strategy(reversed);
     std::cout << processor.process("abc") << '\n';
 
+    // Декоратор
     processor.set_strategy(with_brackets(reversed));
     std::cout << processor.process("abc") << '\n';
 
+    processor.set_strategy(with_brackets(with_brackets(reversed)));
+    std::cout << processor.process("abc") << '\n';
     return 0;
 }
