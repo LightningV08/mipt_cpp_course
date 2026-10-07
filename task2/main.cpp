@@ -21,6 +21,11 @@ private:
     TextTransform strategy_;
 };
 
+TextTransform with_brackets(TextTransform inner) {
+    return [inner](std::string text) {
+        return "[" + inner(text) + "]";
+    };
+}
 
 int main() {
     TextTransform unchanged = [](std::string text) { return text; };
@@ -33,6 +38,9 @@ int main() {
     std::cout << processor.process("abc") << '\n';
 
     processor.set_strategy(reversed);
+    std::cout << processor.process("abc") << '\n';
+
+    processor.set_strategy(with_brackets(reversed));
     std::cout << processor.process("abc") << '\n';
 
     return 0;
